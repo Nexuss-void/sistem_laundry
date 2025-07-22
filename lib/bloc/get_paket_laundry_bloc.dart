@@ -15,6 +15,7 @@ class GetPaketLaundryBloc
 
   GetPaketLaundryBloc() : super(GetPaketLaundryInitial()) {
     on<PaketLaundryFetched>(_onLaundryFetched);
+    on<PaketLaundrySearch>(_onLaundrySearch);
   }
 
   Future<void> _onLaundryFetched(
@@ -25,6 +26,19 @@ class GetPaketLaundryBloc
     try {
       List<PaketLaundryModel> list = await paketLaundryRepo.getPaket();
       emit(GetPaketLaundryLoaded(listPaketLaundry: list));
+    } catch (e) {
+      emit(GetPaketLaundryError(message: e.toString()));
+    }
+  }
+
+  FutureOr<void> _onLaundrySearch(
+    PaketLaundrySearch event,
+    Emitter<GetPaketLaundryState> emit,
+  ) async {
+    emit(GetPaketLaundryLoading());
+    try {
+      final result = await paketLaundryRepo.searchPaketLaundry(event.keyword);
+      emit(GetPaketLaundryLoaded(listPaketLaundry: result));
     } catch (e) {
       emit(GetPaketLaundryError(message: e.toString()));
     }

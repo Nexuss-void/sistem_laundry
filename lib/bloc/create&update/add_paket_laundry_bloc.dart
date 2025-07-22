@@ -19,14 +19,14 @@ class AddPaketLaundryBloc
     on<UpdatePaketLaundryPressed>(_onUpdatePaketLaundryPressed);
   }
 
-  Future<void> _onAddPaketLaundryPressed(
+  FutureOr<void> _onAddPaketLaundryPressed(
     AddPaketLaundryPressed event,
     Emitter<AddPaketLaundryState> emit,
   ) async {
     final params = PaketLaundryParam(
       id: event.paketLaundryParam.id,
-      kode_paket: event.paketLaundryParam.kode_paket,
       nama_paket: event.paketLaundryParam.nama_paket,
+      deskripsi: event.paketLaundryParam.deskripsi,
       layanan: event.paketLaundryParam.layanan,
       harga: event.paketLaundryParam.harga,
       kategori: event.paketLaundryParam.kategori,
@@ -42,14 +42,14 @@ class AddPaketLaundryBloc
     }
   }
 
-  Future<void> _onUpdatePaketLaundryPressed(
+  FutureOr<void> _onUpdatePaketLaundryPressed(
     UpdatePaketLaundryPressed event,
     Emitter<AddPaketLaundryState> emit,
   ) async {
     final params = PaketLaundryParam(
       id: event.paketLaundryParam.id,
-      kode_paket: event.paketLaundryParam.kode_paket,
       nama_paket: event.paketLaundryParam.nama_paket,
+      deskripsi: event.paketLaundryParam.deskripsi,
       layanan: event.paketLaundryParam.layanan,
       harga: event.paketLaundryParam.harga,
       kategori: event.paketLaundryParam.kategori,

@@ -1,15 +1,15 @@
 class PaketLaundryModel {
   final int? id;
-  final String? kode_paket;
   final String? nama_paket;
+  final String? deskripsi;
   final String? layanan;
   final int? harga;
-  final int? kategori;
+  final int? kategori; // id kategori
 
   PaketLaundryModel({
     required this.id,
-    required this.kode_paket,
     required this.nama_paket,
+    required this.deskripsi,
     required this.layanan,
     required this.harga,
     required this.kategori,
@@ -18,11 +18,11 @@ class PaketLaundryModel {
   factory PaketLaundryModel.fromJson(Map<String, dynamic> json) {
     return PaketLaundryModel(
       id: json['id'],
-      kode_paket: json['kode_paket'],
       nama_paket: json['nama_paket'],
+      deskripsi: json['deskripsi'],
       layanan: json['layanan'],
       harga: json['harga'],
-      kategori: json['kategori'],
+      kategori: json['kategori'], // ini ID kategori
     );
   }
 }

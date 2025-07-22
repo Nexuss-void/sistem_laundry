@@ -14,8 +14,8 @@ class PaketLaundryFormpage extends StatefulWidget {
 }
 
 class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
-  final TextEditingController tecCodePaket = TextEditingController();
   final TextEditingController tecNamePaket = TextEditingController();
+  final TextEditingController tecDeskripsi = TextEditingController();
   final TextEditingController tecService = TextEditingController();
   final TextEditingController tecPrice = TextEditingController();
   final TextEditingController tecCategory = TextEditingController();
@@ -25,8 +25,8 @@ class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
   @override
   void initState() {
     if (widget.paketLaundryModel != null) {
-      tecCodePaket.text = widget.paketLaundryModel!.kode_paket!;
       tecNamePaket.text = widget.paketLaundryModel!.nama_paket!;
+      tecDeskripsi.text = widget.paketLaundryModel!.deskripsi!;
       tecService.text = widget.paketLaundryModel!.layanan!;
       tecPrice.text = widget.paketLaundryModel!.harga!.toString();
       tecCategory.text = widget.paketLaundryModel!.kategori!.toString();
@@ -38,8 +38,8 @@ class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
 
   @override
   void emptyForm() {
-    tecCodePaket.text = '';
     tecNamePaket.text = '';
+    tecDeskripsi.text = '';
     tecService.text = '';
     tecPrice.text = '';
   }
@@ -62,22 +62,6 @@ class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
             key: globalKey,
             child: Column(
               children: [
-                //input kode paket
-                TextFormField(
-                  controller: tecCodePaket,
-                  decoration: InputDecoration(
-                    labelText: 'Kode Paket Laundry',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kode paket laundry wajib diisi';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-
                 //input nama paket
                 TextFormField(
                   controller: tecNamePaket,
@@ -107,6 +91,20 @@ class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
                     }
                     return null;
                   },
+                ),
+                SizedBox(height: 16),
+
+                // Deskripsi Paket
+                TextFormField(
+                  controller: tecDeskripsi,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: 'Deskripsi',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Deskripsi Wajib diisi'
+                      : null,
                 ),
                 SizedBox(height: 16),
 
@@ -184,8 +182,8 @@ class _PaketLaundryFormpageState extends State<PaketLaundryFormpage> {
                               var params = PaketLaundryParam(
                                 id: widget.paketLaundryModel?.id,
                                 // null jika post
-                                kode_paket: tecCodePaket.text,
                                 nama_paket: tecNamePaket.text,
+                                deskripsi: tecDeskripsi.text,
                                 layanan: tecService.text,
                                 harga: int.parse(tecPrice.text),
                                 kategori: int.parse(tecCategory.text),

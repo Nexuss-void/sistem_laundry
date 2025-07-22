@@ -55,4 +55,20 @@ class PaketLaundryRepo extends ApiClient {
       throw Exception('Terjadi kesalahan: ${e.message}');
     }
   }
+
+  Future<List<PaketLaundryModel>> searchPaketLaundry(String keyword) async {
+    try {
+      final response = await dio.get(
+        'paket_laundry/search/',
+        queryParameters: {'search': keyword},
+      );
+
+      debugPrint('Search response: ${response.data}');
+
+      List list = response.data;
+      return list.map((e) => PaketLaundryModel.fromJson(e)).toList();
+    } on DioException catch (e) {
+      throw Exception(e.message);
+    }
+  }
 }

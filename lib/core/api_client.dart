@@ -6,7 +6,7 @@ abstract class ApiClient {
   ApiClient() {
     _dio.options.headers['content-type'] = 'application/json';
     _dio.options.baseUrl =
-        'https://laundryabchosting-production-6f22.up.railway.app/api/';
+        'https://laundryabchosting-production-1821.up.railway.app/api/';
   }
   Dio get dio => _dio;
 }

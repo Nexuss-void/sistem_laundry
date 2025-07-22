@@ -5,57 +5,99 @@ import 'package:sistem_laundryabc/models/paket_laundry_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sistem_laundryabc/ui/paket_laundry_formpage.dart';
 
-class GetPaketLaundryabcPage extends StatelessWidget {
+class GetPaketLaundryabcPage extends StatefulWidget {
   const GetPaketLaundryabcPage({super.key});
+
+  @override
+  State<GetPaketLaundryabcPage> createState() => _GetPaketLaundryabcPageState();
+}
+
+class _GetPaketLaundryabcPageState extends State<GetPaketLaundryabcPage> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<GetPaketLaundryBloc>().add(PaketLaundryFetched());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Paket Laundry')),
-      body: BlocBuilder<GetPaketLaundryBloc, GetPaketLaundryState>(
-        builder: (context, state) {
-          return switch (state) {
-            GetPaketLaundryInitial() || GetPaketLaundryLoading() => Center(
-              child: CircularProgressIndicator(),
-            ),
-            // TODO: Handle this case.
-            GetPaketLaundryLoaded(listPaketLaundry: var data)
-                when data.isNotEmpty =>
-              ListView.builder(
-                itemCount: state.listPaketLaundry.length,
-                itemBuilder: (_, index) {
-                  PaketLaundryModel paketLaundryModel =
-                      state.listPaketLaundry[index];
-                  return ListTile(
-                    onTap: () {
-                      debugPrint('Item:${paketLaundryModel.nama_paket}');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => PaketLaundryFormpage(
-                            paketLaundryModel: paketLaundryModel,
-                          ),
-                        ),
-                      ).then(
-                        (value) => context.read<GetPaketLaundryBloc>().add(
-                          PaketLaundryFetched(),
-                        ),
-                      );
-                    },
-                    title: Text(paketLaundryModel.nama_paket.toString()),
-                    subtitle: Text(
-                      'Kode: ${paketLaundryModel.kode_paket.toString()} ',
-                    ),
-                  );
-                },
+      appBar: AppBar(title: const Text('Paket Laundry')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                context.read<GetPaketLaundryBloc>().add(
+                  PaketLaundrySearch(keyword: value),
+                );
+              },
+              decoration: const InputDecoration(
+                labelText: 'Cari Paket Laundry',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
               ),
-            // TODO: Handle this case.
-            GetPaketLaundryError() => Center(child: Text(state.message)),
-            // TODO: Handle this case.
-            GetPaketLaundryLoaded() => Center(child: Text('data tidak ada')),
-          };
-        },
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<GetPaketLaundryBloc, GetPaketLaundryState>(
+              builder: (context, state) {
+                return switch (state) {
+                  GetPaketLaundryInitial() || GetPaketLaundryLoading() =>
+                    const Center(child: CircularProgressIndicator()),
+
+                  GetPaketLaundryLoaded(listPaketLaundry: var data)
+                      when data.isNotEmpty =>
+                    ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (_, index) {
+                        final paket = data[index];
+                        return ListTile(
+                          title: Text(paket.nama_paket!),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Layanan: ${paket.layanan}'),
+                              Text('Harga: ${paket.harga}'),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PaketLaundryFormpage(
+                                  paketLaundryModel: paket,
+                                ),
+                              ),
+                            ).then(
+                              (value) => context
+                                  .read<GetPaketLaundryBloc>()
+                                  .add(PaketLaundryFetched()),
+                            );
+                          },
+                        );
+                      },
+                    ),
+
+                  GetPaketLaundryLoaded() => const Center(
+                    child: Text('Data tidak ditemukan'),
+                  ),
+
+                  GetPaketLaundryError(message: var msg) => Center(
+                    child: Text(msg),
+                  ),
+                };
+              },
+            ),
+          ),
+        ],
       ),
+
+      // ✅ FloatingActionButton ditambahkan di sini
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -71,7 +113,7 @@ class GetPaketLaundryabcPage extends StatelessWidget {
                 context.read<GetPaketLaundryBloc>().add(PaketLaundryFetched()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
